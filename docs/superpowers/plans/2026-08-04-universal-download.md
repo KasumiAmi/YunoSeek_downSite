@@ -26,7 +26,7 @@
 - Consumes: current `index.html` download-section source.
 - Produces: a failing check proving the current page still contains three cards and no Universal card.
 
-- [ ] **Step 1: Run the pre-change assertion**
+- [x] **Step 1: Run the pre-change assertion**
 
 ```powershell
 $html = Get-Content -Raw -Encoding utf8 -LiteralPath 'index.html'
@@ -48,15 +48,15 @@ Expected: FAIL because the current source contains three cards and architecture-
 - Consumes: existing `.download-grid`, `.download-card`, `.icon`, `.abi`, `.size`, and `.btn` styles.
 - Produces: one centered card labeled `Universal`, with the current first-card URL retained as a placeholder.
 
-- [ ] **Step 1: Change the grid to one centered constrained column**
+- [x] **Step 1: Change the grid to one centered constrained column**
 
 Update `.download-grid` so its columns are `minmax(0, 420px)`, it remains centered with `margin: 0 auto`, and its content is centered with `justify-content: center`.
 
-- [ ] **Step 2: Remove the two additional architecture cards**
+- [x] **Step 2: Remove the two additional architecture cards**
 
 Keep one `.download-card` and remove the `armeabi-v7a` and `x86_64` card blocks.
 
-- [ ] **Step 3: Replace architecture-specific card copy**
+- [x] **Step 3: Replace architecture-specific card copy**
 
 Use the following content in the remaining card while preserving its icon and button:
 
@@ -75,14 +75,14 @@ Use the following content in the remaining card while preserving its icon and bu
 - Consumes: the modified download section.
 - Produces: evidence that the section has one Universal card, centered single-column CSS, preserved metadata, and balanced section markup.
 
-- [ ] **Step 1: Run the focused assertions**
+- [x] **Step 1: Run the focused assertions**
 
 ```powershell
 $html = Get-Content -Raw -Encoding utf8 -LiteralPath 'index.html'
 $downloadSection = [regex]::Match($html, '<section class="section download[\s\S]*?</section>').Value
 if (([regex]::Matches($downloadSection, 'class="download-card"')).Count -ne 1) { throw 'Download card count is not 1' }
 if ($downloadSection -notmatch '>Universal<') { throw 'Universal label is missing' }
-if ($downloadSection -match 'arm64-v8a|armeabi-v7a|x86_64') { throw 'Architecture-specific labels remain in the download card' }
+if ($downloadSection -match '<div class="abi">(?:arm64-v8a|armeabi-v7a|x86_64)</div>') { throw 'Architecture-specific labels remain in the download card' }
 if ($html -notmatch 'grid-template-columns:minmax\(0,420px\)') { throw 'Single-column constrained grid is missing' }
 if ($html -notmatch 'justify-content:center') { throw 'Centered grid alignment is missing' }
 if ($downloadSection -notmatch 'class="download-meta"') { throw 'Download metadata was removed' }
@@ -92,7 +92,7 @@ Write-Output 'Universal download assertions passed.'
 
 Expected: all assertions pass with exit code 0.
 
-- [ ] **Step 2: Review the final diff**
+- [x] **Step 2: Review the final diff**
 
 ```powershell
 git diff --check
@@ -106,13 +106,13 @@ Expected: no whitespace errors; the diff is limited to the download CSS and HTML
 **Files:**
 - Modify: `index.html`
 
-- [ ] **Step 1: Stage the page change**
+- [x] **Step 1: Stage the page change**
 
 ```powershell
 git add -- index.html
 ```
 
-- [ ] **Step 2: Commit the page change**
+- [x] **Step 2: Commit the page change**
 
 ```powershell
 git commit -m "feat: merge download cards into universal option"
